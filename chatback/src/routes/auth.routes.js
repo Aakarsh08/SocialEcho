@@ -1,31 +1,16 @@
 import express from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-
+import { signup } from '../controllers/signup.js';
+import { login } from '../controllers/login.js';
+import { verifyToken } from '../middlewares/auth.middleware.js';
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
-  const { email, password } = req.body;
-  const existing = await User.findOne({ email });
-  if (existing) return res.status(400).json({ msg: 'User exists' });
-
-  const hash = await bcrypt.hash(password, 10);
-  const newUser = new User({ email, password: hash });
-  await newUser.save();
-  res.status(201).json({ msg: 'User registered' });
+router.post('/register', signup);
+router.post('/login', login);
+router.get('/profile', verifyToken, (req, res) => {
+  console.log('📥 Cookies received on /api/profile:', req.cookies);
+  console.log('🧑 Authenticated user:', req.user);
+  res.json({ msg: `Welcome, user ${req.user.id}` });
 });
 
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(401).json({ msg: 'Invalid email' });
-
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(403).json({ msg: 'Wrong password' });
-
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-  res.json({ token });
-});
 
 export default router;
