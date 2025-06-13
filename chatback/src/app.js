@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import authRoutes from './routes/auth.routes.js';
+import uploadRoute from './routes/uploadRoute.js';
+import postRoutes from './routes/post.routes.js';
+
 const app = express();
 
 
@@ -24,6 +27,9 @@ app.use(cookieParser());
 app.use('/api', authRoutes);
 app.get('/', (req, res) => {
     res.send('Welcome to Chatback');
-})
+});
+app.use('/upload', uploadRoute);
+app.use('/posts', postRoutes); 
+
 
 export { app };
