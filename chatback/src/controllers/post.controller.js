@@ -1,5 +1,6 @@
 import Post from '../models/Posts.js';
 import cloudinary from '../utils/cloudinary.js';
+import User from '../models/User.js';
 
 export const createPost = async (req, res) => {
   try {
@@ -29,5 +30,22 @@ export const createPost = async (req, res) => {
   } catch (error) {
     console.error('Post creation failed:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+
+export const getDashboardPosts = async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user.id);
+    if (!currentUser) return res.status(404).json({ message: 'User not found' });
+
+    const posts = await Post.find({ author: { $in: currentUser.following } })
+      .sort({ createdAt: -1 })
+      .populate('author', 'username') // to get author's username
+
+    res.status(200).json(posts);
+  } catch (err) {
+    console.error('Dashboard fetch failed:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 };

@@ -1,35 +1,32 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes.js';
-import uploadRoute from './routes/uploadRoute.js';
 import postRoutes from './routes/post.routes.js';
+
+dotenv.config();
 
 const app = express();
 
-
-import dotenv from 'dotenv';
-dotenv.config();
-
 app.use(cors({
-  origin: 'http://localhost:5173',  // ✅ Hardcode for now
+  origin: 'http://localhost:5173',
   credentials: true,
-//   methods: ['GET', 'POST', 'OPTIONS'],  // ✅ Include OPTIONS
-//   allowedHeaders: ['Content-Type']      // ✅ Allow headers you use
 }));
 
-
-
-app.use(express.json({limit: "16kb"}));
-app.use(express.urlencoded({limit: "16kb", extended: true}));
-app.use(express.static("public"));
+app.use(express.json({ limit: '16kb' }));
+app.use(express.urlencoded({ limit: '16kb', extended: true }));
+app.use(express.static('public'));
 app.use(cookieParser());
+
+// ✅ Auth routes
 app.use('/api', authRoutes);
+
+// ✅ Home test
 app.get('/', (req, res) => {
-    res.send('Welcome to Chatback');
+  res.send('Welcome to Chatback');
 });
-app.use('/upload', uploadRoute);
-app.use('/posts', postRoutes); 
 
-
+// ✅ Upload a post (with optional image)
+app.use('/posts', postRoutes);
 export { app };
