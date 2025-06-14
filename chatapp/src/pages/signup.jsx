@@ -26,7 +26,7 @@ export default function Signup() {
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100 flex-col' style={{ backgroundImage: `url(${bgImage})` }}>
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-10 drop-shadow-lg text-center pt-10">
+      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-pink-100 mb-10 drop-shadow-lg text-center pt-10">
     Hop on to <span className="text-red-300">SOCIAL ECHO</span>
   </h1>
       <form

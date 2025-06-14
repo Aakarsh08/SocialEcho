@@ -35,3 +35,23 @@ export const followUser = async (req, res) => {
     res.status(500).json({ msg: 'Server error' });
   }
 };
+
+export const unfollowUser = async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user.id);
+    const targetUserId = req.params.id;
+
+    // Only attempt to remove if the user is in the list
+    if (currentUser.following.includes(targetUserId)) {
+      currentUser.following = currentUser.following.filter(
+        (id) => id.toString() !== targetUserId
+      );
+      await currentUser.save();
+    }
+
+    res.json({ msg: 'Unfollowed successfully' });
+  } catch (err) {
+    console.error('❌ Error in unfollow controller:', err);
+    res.status(500).json({ msg: 'Server error' });
+  }
+};

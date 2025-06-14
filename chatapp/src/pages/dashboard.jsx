@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import CreatePostForm from '../components/CreatePostForm';
+import CreatePostDialog from '../components/CreatePostForm'; // Assuming this is the correct path
 import PostCard from '../components/PostCard';
 import FollowCard from '../components/FollowCard';
-
-
-
 
 export default function Dashboard() {
   const [posts, setPosts] = useState([]);
@@ -21,7 +18,6 @@ export default function Dashboard() {
       .catch(err => console.error('❌ Failed to fetch users:', err));
   }, []);
 
-  // 🔁 Toggle follow status locally in Dashboard's user list
   const handleToggleFollowStatus = (userId) => {
     setUsers(prevUsers =>
       prevUsers.map(user =>
@@ -31,12 +27,16 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="h-screen bg-blue-100 p-4 flex gap-8">
-      <div className="w-[75vw] flex flex-col gap-4">
-        <div className="bg-white border rounded-xl p-4">
-          <CreatePostForm setPosts={setPosts} />
+    <div className="min-h-screen bg-blue-100 p-4 flex flex-col lg:flex-row gap-4">
+      {/* Left Side */}
+      <div className="flex-[3] flex flex-col gap-4">
+        {/* Sticky Create Post */}
+        <div className="sticky top-0 z-20 bg-blue-100">
+          <CreatePostDialog setPosts={setPosts} />
         </div>
-        <div className="bg-white border rounded-xl p-4 h-full">
+
+        {/* Scrollable Posts */}
+        <div className="flex-1 overflow-y-auto max-h-[calc(100vh-100px)] bg-white border rounded-xl p-4">
           {posts.length > 0 ? (
             posts.map(post => <PostCard key={post._id} post={post} />)
           ) : (
@@ -45,7 +45,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="flex-1 bg-white border rounded-xl p-4">
+      {/* Right Side: Suggested Users */}
+      <div className="flex-1 h-[calc(100vh-32px)] bg-white border rounded-xl p-4 overflow-y-auto">
         <h3 className="text-lg font-semibold mb-3">Suggested Users</h3>
         {users.length === 0 ? (
           <p className="text-sm italic text-gray-600">No users to follow</p>
