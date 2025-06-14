@@ -39,10 +39,10 @@ export const getDashboardPosts = async (req, res) => {
     const currentUser = await User.findById(req.user.id);
     if (!currentUser) return res.status(404).json({ message: 'User not found' });
 
-    const posts = await Post.find({ author: { $in: currentUser.following } })
-      .sort({ createdAt: -1 })
-      .populate('author', 'username') // to get author's username
-
+    const posts = await Post.find({})
+  .sort({ createdAt: -1 })
+  .populate('author', 'username'); // to get author's username
+      console.log('Fetched posts:', posts);
     res.status(200).json(posts);
   } catch (err) {
     console.error('Dashboard fetch failed:', err);

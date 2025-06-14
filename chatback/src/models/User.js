@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }]
 });
 
 export default mongoose.model('User', userSchema);

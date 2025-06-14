@@ -1,37 +1,38 @@
-// components/FollowCard.jsx
-import { useState } from 'react';
 import axios from 'axios';
+import { useState } from 'react';
 
-export default function FollowCard({ user }) {
-//   const [isFollowing, setIsFollowing] = useState(false); // placeholder
+export default function FollowCard({ user, onToggleFollow }) {
+  const [isFollowing, setIsFollowing] = useState(user.isFollowing);
 
-//   const handleFollow = async () => {
-//     try {
-//       await axios.post(`http://localhost:7000/api/follow/${user._id}`, {}, {
-//         withCredentials: true
-//       });
-//       setIsFollowing(true);
-//     } catch (err) {
-//       console.error('❌ Follow failed:', err);
-//     }
-//   };
+  const handleToggleFollow = async () => {
+    try {
+      const url = isFollowing
+        ? `http://localhost:7000/posts/unfollow/${user._id}`
+        : `http://localhost:7000/posts/follow/${user._id}`;
+
+      await axios.post(url, {}, { withCredentials: true });
+
+      // ✅ Update local state
+      setIsFollowing(!isFollowing);
+
+      // ✅ Notify Dashboard to update UI
+      onToggleFollow(); 
+    } catch (err) {
+      console.error('❌ Follow/unfollow failed:', err);
+    }
+  };
 
   return (
-    // <div style={{
-    //   border: '1px solid #eee',
-    //   padding: '0.5rem',
-    //   marginBottom: '0.5rem',
-    //   display: 'flex',
-    //   justifyContent: 'space-between',
-    //   alignItems: 'center'
-    // }}>
-    //   <span>{user.username}</span>
-    //   <button onClick={handleFollow} disabled={isFollowing}>
-    //     {isFollowing ? 'Following' : 'Follow'}
-    //   </button>
-    // </div>
-    <>
-    <div>FOLLOW CARD</div>
-    </>
+    <div className="flex justify-between items-center border-b py-2">
+      <span>{user.username}</span>
+      <button
+        onClick={handleToggleFollow}
+        className={`px-3 py-1 rounded text-white ${
+          isFollowing ? 'bg-gray-600' : 'bg-blue-500'
+        }`}
+      >
+        {isFollowing ? 'Following' : 'Follow'}
+      </button>
+    </div>
   );
 }
