@@ -4,6 +4,9 @@ import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes.js';
 import postRoutes from './routes/post.routes.js';
+import chatRoutes from './routes/chat.routes.js';
+import messageRoutes from './routes/message.routes.js';
+import userRoutes from './routes/user.routes.js';
 
 dotenv.config();
 
@@ -29,4 +32,10 @@ app.get('/', (req, res) => {
 
 // ✅ Upload a post (with optional image)
 app.use('/posts', postRoutes);
+app.use('/chat', chatRoutes);
+app.use('/messages', messageRoutes);
+
+app.use('/users', userRoutes);
+
+
 export { app };

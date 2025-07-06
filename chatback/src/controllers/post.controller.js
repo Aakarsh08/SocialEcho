@@ -42,7 +42,7 @@ export const getDashboardPosts = async (req, res) => {
     const posts = await Post.find({})
   .sort({ createdAt: -1 })
   .populate('author', 'username'); // to get author's username
-      console.log('Fetched posts:', posts);
+      // console.log('Fetched posts:', posts);
     res.status(200).json(posts);
   } catch (err) {
     console.error('Dashboard fetch failed:', err);

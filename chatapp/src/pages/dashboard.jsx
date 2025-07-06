@@ -3,10 +3,33 @@ import axios from 'axios';
 import CreatePostDialog from '../components/CreatePostForm'; // Assuming this is the correct path
 import PostCard from '../components/PostCard';
 import FollowCard from '../components/FollowCard';
+import socket from '../socket';
 
 export default function Dashboard() {
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
+
+
+  // for sockets
+  useEffect(() => {
+  if (!socket.connected) {
+    socket.connect();
+  }
+  
+  socket.on('connect', () => {
+    console.log('✅ Socket connected:', socket.id);
+  });
+  
+  socket.on('disconnect', () => {
+    console.log('❌ Socket disconnected');
+  });
+
+  return () => {
+    socket.off('connect');
+    socket.off('disconnect');
+  };
+}, []);
+
 
   useEffect(() => {
     axios.get('http://localhost:7000/posts/dashboard', { withCredentials: true })
