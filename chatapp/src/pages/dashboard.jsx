@@ -16,6 +16,14 @@ export default function Dashboard() {
   const [showPostForm, setShowPostForm] = useState(false);
   const isActive = (path) => location.pathname === path;
 
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:7000/api/logout', {}, { withCredentials: true });
+      navigate('/'); // or navigate('/login')
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+  };
 
   useEffect(() => {
     if (!socket.connected) socket.connect();
@@ -101,6 +109,12 @@ export default function Dashboard() {
           <button className="w-full flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/10 text-white/70">
             <Menu className="w-5 h-5" />
             <span>Settings</span>
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-4 px-4 py-3 mt-2 rounded-lg hover:bg-red-500/20 text-red-400"
+          >
+            <span>Logout</span>
           </button>
         </div>
       </div>

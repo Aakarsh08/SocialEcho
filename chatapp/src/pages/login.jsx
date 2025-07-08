@@ -39,13 +39,13 @@ export default function Login() {
         {socialIcons.map((Icon, index) => (
           <div
             key={index}
-            className="absolute text-gray-600 opacity-20 hover:opacity-40 transition-opacity duration-300"
+            className="absolute text-gray-600 opacity-40 hover:opacity-40 transition-opacity duration-300"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               fontSize: `${20 + Math.random() * 20}px`,
               animationDelay: `${Math.random() * 10}s`,
-              animationDuration: `${15 + Math.random() * 10}s`,
+              animationDuration: `${8 + Math.random() * 8}s`,
             }}
           >
             <Icon className="animate-pulse" size={20 + Math.random() * 20} />
