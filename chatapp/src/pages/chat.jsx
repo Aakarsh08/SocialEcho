@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import socket from '../socket';
 import axios from 'axios';
-import baseURL from "../config";
+import {baseURL} from "../config";
 
 export default function Chat() {
   const [currentUserId, setCurrentUserId] = useState(null);

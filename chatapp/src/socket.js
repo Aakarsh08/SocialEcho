@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
-import baseUrl from './config';
+import {baseUrl} from './config';
 
 // Create socket instance but don't connect immediately
 const socket = io(baseUrl, {

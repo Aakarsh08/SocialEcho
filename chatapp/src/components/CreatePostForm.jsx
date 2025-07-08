@@ -12,7 +12,7 @@ import {
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
-import baseURL from "../config";
+import {baseURL} from "../config";
 
 export default function CreatePostDialog({ setPosts }) {
   const [open, setOpen] = useState(false);

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, Send, User, MessageCircle } from 'lucide-react';
 import axios from 'axios';
-import baseURL from '../config'
+import {baseURL} from '../config'
 
 export default function CommentModal({ open, handleOpen, postId }) {
   const [comments, setComments] = useState([]);
