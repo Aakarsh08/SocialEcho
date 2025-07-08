@@ -19,7 +19,8 @@ export const login = async (req, res) => {
     .cookie('token', token, {
       httpOnly: true,
       secure: true, // set to true in production (when using HTTPS)
-      sameSite: 'Lax'
+      sameSite: 'None',
+      path: '/', 
     })
     // console.log('🍪 Set-Cookie header:', res.getHeaders()['set-cookie']); // Log actual cookie header
 res.json({ msg: 'Login successful' });
