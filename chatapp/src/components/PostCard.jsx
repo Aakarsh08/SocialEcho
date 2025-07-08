@@ -4,6 +4,7 @@ import { Heart, MessageCircle, Share, User } from 'lucide-react';
 import CommentModal from './CommentModal'; // ✅ Make sure path is correct
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { baseURL } from '../config';
 
 export default function PostCard({ post }) {
   dayjs.extend(relativeTime);
@@ -14,7 +15,7 @@ export default function PostCard({ post }) {
   const handleLike = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:7000/posts/like/${post._id}`,
+        `${baseURL}/posts/like/${post._id}`,
         {},
         { withCredentials: true }
       );

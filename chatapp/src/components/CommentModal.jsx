@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { X, Send, User, MessageCircle } from 'lucide-react';
 import axios from 'axios';
+import baseURL from '../config'
 
 export default function CommentModal({ open, handleOpen, postId }) {
   const [comments, setComments] = useState([]);
@@ -11,7 +12,7 @@ export default function CommentModal({ open, handleOpen, postId }) {
   useEffect(() => {
     if (open) {
       axios
-        .get(`http://localhost:7000/posts/comments/${postId}`, {
+        .get(`${baseURL}/posts/comments/${postId}`, {
           withCredentials: true,
         })
         .then((res) => setComments(res.data))
@@ -28,7 +29,7 @@ export default function CommentModal({ open, handleOpen, postId }) {
 
     try {
       const res = await axios.post(
-        `http://localhost:7000/posts/comments/${postId}`,
+        `${baseURL}/posts/comments/${postId}`,
         { content: newComment },
         { withCredentials: true }
       );

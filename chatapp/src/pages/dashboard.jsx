@@ -6,6 +6,7 @@ import PostCard from '../components/PostCard';
 import FollowCard from '../components/FollowCard';
 import socket from '../socket';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { baseURL } from '../config';
 
 
 export default function Dashboard() {
@@ -18,7 +19,7 @@ export default function Dashboard() {
 
   const handleLogout = async () => {
     try {
-      await axios.post('http://localhost:7000/api/logout', {}, { withCredentials: true });
+      await axios.post(`${baseURL}/api/logout`, {}, { withCredentials: true });
       navigate('/'); // or navigate('/login')
     } catch (err) {
       console.error('Logout failed:', err);
@@ -36,11 +37,11 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    axios.get('http://localhost:7000/posts/dashboard', { withCredentials: true })
+    axios.get(`${baseURL}/posts/dashboard`, { withCredentials: true })
       .then(res => setPosts(res.data))
       .catch(err => console.error('❌ Failed to fetch posts:', err));
 
-    axios.get('http://localhost:7000/posts/follow-status', { withCredentials: true })
+    axios.get(`${baseURL}/posts/follow-status`, { withCredentials: true })
       .then(res => setUsers(res.data))
       .catch(err => console.error('❌ Failed to fetch users:', err));
   }, []);

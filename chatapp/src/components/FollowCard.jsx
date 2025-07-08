@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { User } from 'lucide-react';
+import { baseURL } from '../config';
 
 export default function FollowCard({ user, onToggleFollow }) {
   const [isFollowing, setIsFollowing] = useState(user.isFollowing);
@@ -8,8 +9,8 @@ export default function FollowCard({ user, onToggleFollow }) {
   const handleToggleFollow = async () => {
     try {
       const url = isFollowing
-        ? `http://localhost:7000/posts/unfollow/${user._id}`
-        : `http://localhost:7000/posts/follow/${user._id}`;
+        ? `${baseURL}/posts/unfollow/${user._id}`
+        : `${baseURL}/posts/follow/${user._id}`;
 
       await axios.post(url, {}, { withCredentials: true });
 

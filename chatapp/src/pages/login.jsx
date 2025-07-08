@@ -5,6 +5,7 @@ import {
   Heart, MessageCircle, Share2, Bookmark, ThumbsUp, Eye, Send, Users,
   Bell, Hash, AtSign, Camera, Mic, Video, Image, Star, Zap, Smile, Globe
 } from 'lucide-react';
+import { baseURL } from '../config';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:7000/api/login', {
+      const res = await axios.post(`${baseURL}/api/login`, {
         email,
         password,
       }, {

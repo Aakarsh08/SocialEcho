@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import socket from '../socket';
 import axios from 'axios';
+import baseURL from "../config";
 
 export default function Chat() {
   const [currentUserId, setCurrentUserId] = useState(null);
@@ -13,7 +14,7 @@ export default function Chat() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:7000/users/me', { withCredentials: true })
+      .get(`${baseURL}/users/me`, { withCredentials: true })
       .then((res) => setCurrentUserId(res.data.user))
       .catch((err) => console.error('Auth check failed:', err));
   }, []);
@@ -22,7 +23,7 @@ export default function Chat() {
     if (!currentUserId) return;
 
     axios
-      .get(`http://localhost:7000/users/all/${currentUserId}`, {
+      .get(`${baseURL}/users/all/${currentUserId}`, {
         withCredentials: true,
       })
       .then((res) => setUsers(res.data))
@@ -78,7 +79,7 @@ export default function Chat() {
     setSelectedUser(user);
     try {
       const res = await axios.get(
-        `http://localhost:7000/chat/messages/${currentUserId}/${user._id}`,
+        `${baseURL}/chat/messages/${currentUserId}/${user._id}`,
         { withCredentials: true }
       );
 

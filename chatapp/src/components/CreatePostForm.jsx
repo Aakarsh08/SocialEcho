@@ -12,6 +12,7 @@ import {
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
+import baseURL from "../config";
 
 export default function CreatePostDialog({ setPosts }) {
   const [open, setOpen] = useState(false);
@@ -29,7 +30,7 @@ export default function CreatePostDialog({ setPosts }) {
     if (image) formData.append('image', image);
 
     try {
-      const res = await axios.post("http://localhost:7000/posts/upload", formData, {
+      const res = await axios.post(`${baseURL}/posts/upload`, formData, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",
