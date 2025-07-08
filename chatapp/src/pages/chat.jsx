@@ -11,7 +11,6 @@ export default function Chat() {
   const messagesEndRef = useRef(null);
   const [isTyping, setIsTyping] = useState(false);
 
-  // 🔵 Get current user ID
   useEffect(() => {
     axios
       .get('http://localhost:7000/users/me', { withCredentials: true })
@@ -19,7 +18,6 @@ export default function Chat() {
       .catch((err) => console.error('Auth check failed:', err));
   }, []);
 
-  // 🔵 Get all users except self
   useEffect(() => {
     if (!currentUserId) return;
 
@@ -31,33 +29,28 @@ export default function Chat() {
       .catch((err) => console.error('Error loading users:', err));
   }, [currentUserId]);
 
-  // 🟢 Set up socket - FIXED VERSION
   useEffect(() => {
     if (!currentUserId) return;
 
-    // Connect if not already connected
     if (!socket.connected) {
       socket.connect();
     }
 
     const handleReceiveMessage = (msg) => {
-      console.log('📩 Message received:', msg);
-      
-      // ✅ FIXED: Only add message if it's for the current chat
-      if (selectedUser && 
-          ((msg.from === selectedUser._id && msg.to === currentUserId) ||
-           (msg.from === currentUserId && msg.to === selectedUser._id))) {
-        
+      if (
+        selectedUser &&
+        ((msg.from === selectedUser._id && msg.to === currentUserId) ||
+          (msg.from === currentUserId && msg.to === selectedUser._id))
+      ) {
         setMessages((prev) => {
-          // Prevent duplicate messages
-          const isDuplicate = prev.some(prevMsg => 
-            prevMsg._id === msg._id || 
-            (prevMsg.from === msg.from && prevMsg.text === msg.text && 
-             Math.abs(prevMsg.timestamp - msg.timestamp) < 1000)
+          const isDuplicate = prev.some(
+            (prevMsg) =>
+              prevMsg._id === msg._id ||
+              (prevMsg.from === msg.from &&
+                prevMsg.text === msg.text &&
+                Math.abs(prevMsg.timestamp - msg.timestamp) < 1000)
           );
-          
           if (isDuplicate) return prev;
-          
           return [...prev, msg];
         });
       }
@@ -70,11 +63,8 @@ export default function Chat() {
     };
   }, [currentUserId, selectedUser]);
 
-  // 🟡 Send message
   const handleSend = () => {
     if (!text.trim() || !selectedUser) return;
-
-    console.log('📤 Sending message to:', selectedUser._id, 'Text:', text);
 
     socket.emit('send-message', {
       to: selectedUser._id,
@@ -84,7 +74,6 @@ export default function Chat() {
     setText('');
   };
 
-  // 🟣 Load chat history when user selected
   const handleUserSelect = async (user) => {
     setSelectedUser(user);
     try {
@@ -92,21 +81,19 @@ export default function Chat() {
         `http://localhost:7000/chat/messages/${currentUserId}/${user._id}`,
         { withCredentials: true }
       );
-      
-      // ✅ FIXED: Map database structure to match socket structure
-      const normalizedMessages = res.data.map(msg => ({
+
+      const normalizedMessages = res.data.map((msg) => ({
         ...msg,
-        from: msg.sender, // Map sender to from
-        to: msg.sender === currentUserId ? user._id : currentUserId, // Infer 'to' field
+        from: msg.sender,
+        to: msg.sender === currentUserId ? user._id : currentUserId,
       }));
-      
+
       setMessages(normalizedMessages);
     } catch (err) {
       console.error('Error loading chat messages:', err);
     }
   };
 
-  // 🔄 Auto-scroll to bottom when messages change
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -115,7 +102,6 @@ export default function Chat() {
     scrollToBottom();
   }, [messages]);
 
-  // Simulate typing indicator
   useEffect(() => {
     if (text.length > 0) {
       setIsTyping(true);
@@ -126,7 +112,7 @@ export default function Chat() {
 
   if (!currentUserId) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
         <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 text-white">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
           <p className="text-lg font-medium">Loading...</p>
@@ -136,19 +122,17 @@ export default function Chat() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute top-10 left-10 w-72 h-72 bg-blue-500/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-        <div className="absolute top-40 right-10 w-96 h-96 bg-purple-500/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-        <div className="absolute bottom-10 left-1/2 w-80 h-80 bg-pink-500/20 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000"></div>
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-purple-500/10 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        <div className="absolute top-40 right-10 w-96 h-96 bg-blue-500/10 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-10 left-1/2 w-80 h-80 bg-pink-500/10 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000"></div>
       </div>
 
       <div className="flex h-screen relative z-10">
         {/* Sidebar */}
-        <div className="w-1/3 bg-white/10 backdrop-blur-lg border-r border-white/20 flex flex-col">
-          {/* Header */}
-          <div className="p-6 border-b border-white/20">
+        <div className="w-1/3 bg-black/30 backdrop-blur-lg border-r border-white/10 flex flex-col">
+          <div className="p-6 border-b border-white/10">
             <h1 className="text-2xl font-bold text-white mb-2">Chats</h1>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
@@ -156,15 +140,14 @@ export default function Chat() {
             </div>
           </div>
 
-          {/* Users List */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-2">
+          <div className="flex-1 overflow-y-auto p-4 space-y-2 scrollbar-hide">
             {users.map((user) => (
               <div
                 key={user._id}
                 onClick={() => handleUserSelect(user)}
                 className={`p-4 rounded-xl cursor-pointer transition-all duration-300 hover:scale-105 ${
                   selectedUser?._id === user._id
-                    ? 'bg-gradient-to-r from-blue-500/30 to-purple-500/30 backdrop-blur-sm border border-white/30 shadow-xl'
+                    ? 'bg-gradient-to-r from-purple-600/30 to-blue-500/30 backdrop-blur-sm border border-white/20 shadow-xl'
                     : 'bg-white/5 hover:bg-white/10 backdrop-blur-sm'
                 }`}
               >
@@ -189,8 +172,7 @@ export default function Chat() {
         <div className="flex-1 flex flex-col">
           {selectedUser ? (
             <>
-              {/* Chat Header */}
-              <div className="bg-white/10 backdrop-blur-lg border-b border-white/20 p-6">
+              <div className="bg-black/30 backdrop-blur-lg border-b border-white/10 p-6">
                 <div className="flex items-center space-x-4">
                   <div className="relative">
                     <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
@@ -205,8 +187,7 @@ export default function Chat() {
                 </div>
               </div>
 
-              {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-hide">
                 {messages.map((msg, i) => (
                   <div
                     key={msg._id || i}
@@ -217,17 +198,21 @@ export default function Chat() {
                     <div
                       className={`max-w-xs lg:max-w-md xl:max-w-lg px-4 py-3 rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-105 ${
                         msg.from === currentUserId
-                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-br-md'
-                          : 'bg-white/90 backdrop-blur-sm text-gray-800 rounded-bl-md border border-white/20'
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white rounded-br-md'
+                          : 'bg-white/10 backdrop-blur-sm text-white rounded-bl-md border border-white/10'
                       }`}
                     >
                       <p className="text-sm leading-relaxed">{msg.text}</p>
-                      <p className={`text-xs mt-1 ${
-                        msg.from === currentUserId ? 'text-white/80' : 'text-gray-500'
-                      }`}>
+                      <p
+                        className={`text-xs mt-1 ${
+                          msg.from === currentUserId
+                            ? 'text-white/80'
+                            : 'text-white/60'
+                        }`}
+                      >
                         {new Date(msg.createdAt || msg.timestamp).toLocaleTimeString([], {
                           hour: '2-digit',
-                          minute: '2-digit'
+                          minute: '2-digit',
                         })}
                       </p>
                     </div>
@@ -236,8 +221,7 @@ export default function Chat() {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Message Input */}
-              <div className="bg-white/10 backdrop-blur-lg border-t border-white/20 p-6">
+              <div className="bg-black/30 backdrop-blur-lg border-t border-white/10 p-6">
                 <div className="flex items-center space-x-4">
                   <div className="flex-1 relative">
                     <input
@@ -246,7 +230,7 @@ export default function Chat() {
                       onChange={(e) => setText(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                       placeholder="Type your message..."
-                      className="w-full bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-3 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                      className="w-full bg-black/30 border border-white/10 backdrop-blur-sm text-white placeholder-white/50 rounded-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
                     />
                   </div>
                   <button

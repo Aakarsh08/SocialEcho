@@ -7,7 +7,11 @@ module.exports = withMT({
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+      playfair: ['"Playfair Display"', 'serif'],
+    },
+    },
   },
   plugins: [],
 });

@@ -46,8 +46,8 @@ export default function CreatePostDialog({ setPosts }) {
 
   return (
     <>
-      <div className="flex justify-between items-center bg-white px-4 py-3 rounded-xl shadow-md mb-2 border">
-        <h2 className="text-lg font-semibold text-gray-800">
+      <div className="flex justify-between items-center bg-black px-4 py-3 rounded-xl shadow-md mb-2 border">
+        <h2 className="text-lg text-white font-semibold ">
           Post something for your followers
         </h2>
         <Button onClick={handleOpen} variant="gradient" color="blue">
